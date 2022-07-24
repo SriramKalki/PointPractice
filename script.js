@@ -3,7 +3,7 @@ const videoElement = document.getElementsByClassName('input_video')[0];
     const rectangleElement = document.getElementsByClassName('rectangle')[0];
     const canvasCtx = canvasElement.getContext('2d');
     const rectCtx = rectangleElement.getContext('2d');
-    
+     
     var indexX = 0;
     var indexY = 0;
     var leftX = 100 + Math.floor(Math.random() * 800);
@@ -111,3 +111,4 @@ const videoElement = document.getElementsByClassName('input_video')[0];
                 break
         }
     })
+ 
