@@ -30,3 +30,11 @@ const element = document.getElementById('button')
 element.addEventListener("click", () => {
 	draw("red")
 });
+
+window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case 'z':
+            draw("red")
+            break
+    }
+  })
