@@ -1,11 +1,34 @@
 
 /* CSS */
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #0d39e7 #cccccc;
+  }
 
-#container {
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #cccccc;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #0d39e7;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
+
+  
+.container {
     margin: 0px auto;
-    width: 1200px;
-    height: 900px;
+    width: 1280px;
+    height: 720px;
     border: 10px #333 solid;
+    position: absolute;
 }
 #videoElement {
     width: 1200px;
@@ -14,10 +37,12 @@
 }
 canvas{
     position: absolute;
-    width: 1200px;
-    height: 900px;
 }
 
+p{
+  position: relative;
+  bottom: 0;
+}
 
 .button-3 {
   appearance: none;

@@ -1,36 +1,163 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Pointer Practice!</title>
-        <link rel="stylesheet" href="button.css">
-    </head>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="button.css">
+</head>
+
+<body>
+  <div class="container">
     
-    <body>
-        <button class="button-3" id="button" role="button">Draw Random Rectangles</button>
-        <div id="container">
-            
-            <canvas id="canvas"></canvas>
-            <video autoplay="true" id="videoElement">
-            
-            </video>
-            
-        </div>
 
+    <div class="wrapper">
+        <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+        <canvas class="rectangle" width="1280px" height="720px"></canvas>
+    </div>
+    
+    <video class="input_video" style="opacity: 1;"></video>
+    <h2>Welcome to PointPractice! This was created to help with teaching-so you can point at text/images on your bitpaper better ;)</h2>
+    <p>PointPractice uses finger tracking algorithms developed by MediaPipe. To get started, make sure you give permission for the website 
+        <br>
+        to use your camera! If the camera shown isn't the correct one, go to browser settings, search for "camera", and use the dropdown
+        <br>
+        to change the camera you are using! 
+        <br>
+        When you are done, try using your index finger (finger between the thumb and the middle) to point at the rectangle
+        <br>
+        so your fingertip is inside of it. Keep pointing at it. If the rectangle turns green, 
+        <br> 
+        that means you were pointing to the rectangle for a stable amount of time!
+        <br>
+        This is using Computer Vision/Mediapipe! Amazing? From here, you can press the 'z' key on your keyboard to
+        <br>
+        draw another random rectangle on the screen! If for some reason the camera doesn't detect your finger, try 
+        <br>
+        changing your lighting or manually press 'z'. <strong>Make sure only one hand is visible!</strong> For best results, 
+        <br>
+        point so the foreskin of your hand is fully facing the camera, like <a href='https://i.postimg.cc/JzWx4cf7/image.png' target="_blank">this</a>
+        <br>
+        This was made by Sriram Kalki, using code from mediapipe.
+    </p>
+</div>
+
+  <script type="module">
+    const videoElement = document.getElementsByClassName('input_video')[0];
+    const canvasElement = document.getElementsByClassName('output_canvas')[0];
+    const rectangleElement = document.getElementsByClassName('rectangle')[0];
+    const canvasCtx = canvasElement.getContext('2d');
+    const rectCtx = rectangleElement.getContext('2d');
+    
+    var indexX = 0;
+    var indexY = 0;
+    var leftX = 100 + Math.floor(Math.random() * 800);
+    var leftY = Math.floor(Math.random() * 500);
+    var time = 0;
+
+    function draw(color){
+
+        rectCtx.clearRect(0, 0, 1280, 720);
+
+        const rectWidth = 50
+        const rectHeight = 30
         
-        <script>
-            var video = document.querySelector("#videoElement");
+        leftX = 100 + Math.floor(Math.random() * 800);
+        leftY = 100 + Math.floor(Math.random() * 400);
 
-            if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function (err0r) {
-                    console.log("Something went wrong!");
-                });
+        rectCtx.beginPath();
+        rectCtx.lineWidth = "6";
+        rectCtx.strokeStyle = color;
+        rectCtx.rect(leftX, leftY, rectWidth, rectHeight);
+        rectCtx.stroke();
+        return leftX, leftY
+    }
+
+    function check(leftX, leftY, time){
+        const rectWidth = 50
+        const rectHeight = 30
+
+        if(indexX >= leftX && indexX <= leftX + rectWidth && indexY >= leftY && indexY <= leftY + rectHeight){
+            rectCtx.clearRect(0, 0, 1280, 720);
+            rectCtx.beginPath();
+            rectCtx.lineWidth = "6";
+            var color = time >=100? 'green' : 'red'
+            rectCtx.strokeStyle = color;
+            rectCtx.rect(leftX, leftY, rectWidth, rectHeight);
+            rectCtx.stroke();
+            return true;
+        }else{
+            rectCtx.clearRect(0, 0, 1280, 720);
+            rectCtx.beginPath();
+            rectCtx.lineWidth = "6";
+            rectCtx.strokeStyle = 'red';
+            rectCtx.rect(leftX, leftY, rectWidth, rectHeight);
+            rectCtx.stroke();
+            return false;
+        }
+    }
+
+    function onResults(results) {
+      
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      canvasCtx.drawImage(
+          results.image, 0, 0, canvasElement.width, canvasElement.height);
+      if (results.multiHandLandmarks) {
+        for (const landmarks of results.multiHandLandmarks) {
+            var output = 'x = ' + landmarks[8].x + ' y = ' + landmarks[8].y;
+            indexX = landmarks[8].x * 1280
+            indexY = landmarks[8].y * 720
+            if(check(leftX,leftY,time)){
+                time++
+            }else {
+                time = 0
             }
-        </script>
-        <script src="./script.js"></script>
-    </body>
+            
+            console.log(time)
+          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
+                         {color: '#00FF00', lineWidth: 5});
+          drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+        }
+      }
+      
+      canvasCtx.restore();
+    }
+    
+    const hands = new Hands({locateFile: (file) => {
+      
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }});
+    hands.setOptions({
+      maxNumHands: 2,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+    hands.onResults(onResults);
+    
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await hands.send({image: videoElement});
+      },
+      width: 1280,
+      height: 720
+    });
+    camera.start();
+
+    draw('red') //need to call it once at the start
+
+    window.addEventListener('keydown', (e) => {
+        switch (e.key) {
+            case 'z':
+                
+                draw("red")
+                
+                break
+        }
+    })
+    </script>
+</body>
 </html>
