@@ -9,7 +9,16 @@ const videoElement = document.getElementsByClassName('input_video')[0];
     var leftX = 100 + Math.floor(Math.random() * 800);
     var leftY = Math.floor(Math.random() * 500);
     var time = 0;
+    var good = 0;
+    var bad = 0;
+    var correct = false;
+    var newRect = true;
 
+    function pressZ(opacityString){
+        var pressZ = document.getElementById("pressZ");
+        pressZ.style.opacity = opacityString
+
+    }
     function draw(color){
 
         rectCtx.clearRect(0, 0, 1280, 720);
@@ -28,7 +37,7 @@ const videoElement = document.getElementsByClassName('input_video')[0];
         return leftX, leftY
     }
 
-    function check(leftX, leftY, time){
+    function check(indexX,indexY){
         const rectWidth = 50
         const rectHeight = 30
 
@@ -36,7 +45,14 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             rectCtx.clearRect(0, 0, 1280, 720);
             rectCtx.beginPath();
             rectCtx.lineWidth = "6";
-            var color = time >=100? 'green' : 'red'
+            var color = 'red'
+            if(time >= 50){
+                if(good/time >= 0.4) {color = 'green'; correct = true;}
+
+                time = 0
+                good = 0
+                bad = 0
+            }
             rectCtx.strokeStyle = color;
             rectCtx.rect(leftX, leftY, rectWidth, rectHeight);
             rectCtx.stroke();
@@ -51,7 +67,6 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             return false;
         }
     }
-
     function onResults(results) {
       
       canvasCtx.save();
@@ -60,19 +75,30 @@ const videoElement = document.getElementsByClassName('input_video')[0];
           results.image, 0, 0, canvasElement.width, canvasElement.height);
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
-            var output = 'x = ' + landmarks[8].x + ' y = ' + landmarks[8].y;
+
             indexX = landmarks[8].x * 1280
             indexY = landmarks[8].y * 720
-            if(check(leftX,leftY,time)){
-                time++
+
+            drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
+                {color: '#00FF00', lineWidth: 5});
+            drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+            
+            if(newRect) time = 0
+            
+            if(correct){pressZ("1"); continue;}
+
+            if(check(indexX,indexY)){
+                console.log(good + " " + bad + " " + time + " " + newRect)    
+                good++;
+                time++;
+                newRect = false
             }else {
-                time = 0
+                if(!newRect){bad++; time++;}
+                
             }
             
             
-          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
-                         {color: '#00FF00', lineWidth: 5});
-          drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+         
         }
       }
       
@@ -107,7 +133,9 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             case 'z':
                 
                 draw("red")
-                
+                newRect = true;
+                correct = false;
+                pressZ("0")
                 break
         }
     })

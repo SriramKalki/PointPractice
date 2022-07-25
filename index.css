@@ -39,6 +39,10 @@ canvas{
     position: absolute;
 }
 
+h1{
+  position: absolute;
+  opacity: 0;
+}
 p{
   position: relative;
   bottom: 0;
