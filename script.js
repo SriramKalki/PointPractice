@@ -3,16 +3,19 @@ const videoElement = document.getElementsByClassName('input_video')[0];
     const rectangleElement = document.getElementsByClassName('rectangle')[0];
     const canvasCtx = canvasElement.getContext('2d');
     const rectCtx = rectangleElement.getContext('2d');
-     
+    
+    var automatic = true;
     var indexX = 0;
     var indexY = 0;
     var leftX = 100 + Math.floor(Math.random() * 800);
     var leftY = Math.floor(Math.random() * 500);
-    var time = 0;
+    var checkTime = 0;
     var good = 0;
     var bad = 0;
     var correct = false;
     var newRect = true;
+    var buffer = 0;
+    
 
     function pressZ(opacityString){
         var pressZ = document.getElementById("pressZ");
@@ -46,10 +49,10 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             rectCtx.beginPath();
             rectCtx.lineWidth = "6";
             var color = 'red'
-            if(time >= 50){
-                if(good/time >= 0.4) {color = 'green'; correct = true;}
+            if(checkTime >= 50){
+                if(good/checkTime >= 0.4) {color = 'green'; correct = true;}
 
-                time = 0
+                checkTime = 0
                 good = 0
                 bad = 0
             }
@@ -83,17 +86,33 @@ const videoElement = document.getElementsByClassName('input_video')[0];
                 {color: '#00FF00', lineWidth: 5});
             drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
             
-            if(newRect) time = 0
+            if(newRect) checkTime = 0
             
-            if(correct){pressZ("1"); continue;}
+            if(correct){
+                if(automatic){
+                    buffer++;
+
+                    if(buffer >= 20){
+                        draw("red")
+                        newRect = true;
+                        correct = false;
+                        pressZ("0")
+                        buffer = 0
+                    }
+                    
+                }else{
+                    pressZ("1"); 
+                }
+                continue
+            }
 
             if(check(indexX,indexY)){
-                console.log(good + " " + bad + " " + time + " " + newRect)    
+                console.log(good + " " + bad + " " + checkTime + " " + newRect)    
                 good++;
-                time++;
+                checkTime++;
                 newRect = false
             }else {
-                if(!newRect){bad++; time++;}
+                if(!newRect){bad++; checkTime++;}
                 
             }
             
