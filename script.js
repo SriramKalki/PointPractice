@@ -70,6 +70,19 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             return false;
         }
     }
+
+    function debugHand(){
+        var checkBox = document.getElementById("debugHand"); 
+
+        return checkBox.checked
+    }
+
+    function automaticCheck(){
+        var checkBox = document.getElementById("automatic"); 
+        automatic = checkBox.checked
+        return automatic
+    }
+
     function onResults(results) {
       
       canvasCtx.save();
@@ -82,14 +95,16 @@ const videoElement = document.getElementsByClassName('input_video')[0];
             indexX = landmarks[8].x * 1280
             indexY = landmarks[8].y * 720
 
-            drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
-                {color: '#00FF00', lineWidth: 5});
-            drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
-            
+            if(debugHand()){
+                drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
+                    {color: '#00FF00', lineWidth: 5});
+                drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+            }        
+
             if(newRect) checkTime = 0
             
             if(correct){
-                if(automatic){
+                if(automaticCheck()){
                     buffer++;
 
                     if(buffer >= 20){

@@ -25,15 +25,31 @@
   
 .container {
     margin: 0px auto;
-    width: 1280px;
-    height: 720px;
+    
+
+} 
+
+.w3-container{
+  overflow: hidden;
+}
+.w3-container .howTo{
+  width: 200px;
+  float: left;
+  position: relative;
+  left: 10%;
+  top: 5%;
+  padding: 0%;
+}
+
+.wrapper{
+    width: 1300px;
+    height: 740px;
     border: 10px #333 solid;
-    position: absolute;
 }
 #videoElement {
-    width: 1200px;
-    height: 900px;
-    background-color: #666;
+    width: 1280px;
+    height: 720px;
+    background-color: rgb(194, 14, 14);
 }
 canvas{
     position: absolute;
@@ -48,53 +64,16 @@ p{
   bottom: 0;
 }
 
-.button-3 {
-  appearance: none;
-  background-color: #2ea44f;
-  border: 1px solid rgba(27, 31, 35, .15);
-  border-radius: 6px;
-  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  padding: 6px 16px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: middle;
-  white-space: nowrap;
+.options{
+  margin-left: 50px;
 }
 
-.button-3:focus:not(:focus-visible):not(.focus-visible) {
-  box-shadow: none;
-  outline: none;
+.options >div{
+  display: grid;
+
+  grid-template-columns: 40% 60%;
 }
 
-.button-3:hover {
-  background-color: #2c974b;
-}
-
-.button-3:focus {
-  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
-  outline: none;
-}
-
-.button-3:disabled {
-  background-color: #94d3a2;
-  border-color: rgba(27, 31, 35, .1);
-  color: rgba(255, 255, 255, .8);
-  cursor: default;
-}
-
-.button-3:active {
-  background-color: #298e46;
-  box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+.options >div .switch{
+  margin-top: 10px;
 }

@@ -2,16 +2,55 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="switch.css">
 </head>
 
 <body>
-  <div class="container">
+
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+    <button class="w3-bar-item w3-button w3-large"
+    onclick="w3_close()">Close &times;</button>
+    <div class="options">
+      <div class="debugHand">
+        <h3>Debug Hand</h3>
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" id="debugHand">
+          <span class="slider round"></span>
+        </label>  
+      </div>
+
+      <div class="automatic">
+        <h3>Automatic</h3>
+        <!-- Rounded switch -->
+        <label class="switch">
+          <input type="checkbox" id="automatic">
+          <span class="slider round"></span>
+        </label>  
+      </div>
+    </div>
     
+  </div>
+
+
+  <div class="container" id="container">
+    <div class="w3-teal">
+      <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+      <div class="w3-container">
+        <h1>My Page</h1>
+        <div class="howTo">
+          <a href="./instruction.html">How to Use!!! (WIP)</a>
+          
+        </div>
+      </div>
+    </div>
 
     <div class="wrapper">
         <canvas class="output_canvas" width="1280px" height="720px"></canvas>
@@ -19,32 +58,23 @@
         <h1 id="pressZ">Press the 'z' key to draw another rectangle!</h1>
     </div>
     
-    <video class="input_video" style="opacity: 1;"></video>
-    <h2>Welcome to PointPractice! This was created to help with teaching-so you can point at text/images on your bitpaper better ;)</h2>
-    <p>PointPractice uses finger tracking algorithms developed by MediaPipe. To get started, make sure you give permission for the website 
-        <br>
-        to use your camera! If the camera shown isn't the correct one, go to browser settings, search for "camera", and use the dropdown
-        <br>
-        to change the camera you are using! 
-        <br>
-        When you are done, try using your index finger (finger between the thumb and the middle) to point at the rectangle
-        <br>
-        so your fingertip is inside of it. Keep pointing at it. If the rectangle turns green, 
-        <br> 
-        that means you were pointing to the rectangle for a stable amount of time!
-        <br>
-        This is using Computer Vision/Mediapipe! Amazing? From here, you can press the 'z' key on your keyboard to
-        <br>
-        draw another random rectangle on the screen! If for some reason the camera doesn't detect your finger, try 
-        <br>
-        changing your lighting or manually press 'z'. <strong>Make sure only one hand is visible!</strong> For best results, 
-        <br>
-        point so the front of your hand is fully facing the camera, like <a href='https://i.postimg.cc/JzWx4cf7/image.png' target="_blank">this</a>
-        <br>
-        This was made by Sriram Kalki, using code from mediapipe.
-    </p>
+    <video class="input_video" style="opacity: 0; display: none;"></video>
+   
 </div>
     <script src="./script.js"></script>
+    <script>
+      function w3_open() {
+        document.getElementById("container").style.marginLeft = "25%";
+        document.getElementById("mySidebar").style.width = "25%";
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("openNav").style.display = 'none';
+      }
+      function w3_close() {
+        document.getElementById("container").style.marginLeft = "0%";
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("openNav").style.display = "inline-block";
+      }
+      </script>
   
 </body>
 </html>
